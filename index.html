@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibee — Subscription Tracker</title>
+  
+  <!-- Подключаем шрифты (Google Sans / Roboto) и иконки Material Rounded -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+  <style>
+    /* ---------------- ПЕРЕМЕННЫЕ MATERIAL 3 (Expressive Coral) ---------------- */
+    :root {
+      --primary: #904B3F;
+      --onPrimary: #FFFFFF;
+      --primaryContainer: #FFDAD3;
+      --onPrimaryContainer: #3A0A03;
+      --secondary: #775751;
+      --onSecondary: #FFFFFF;
+      --secondaryContainer: #FFDAD3;
+      --tertiary: #715B2E;
+      --tertiaryContainer: #FDDFA5;
+      --onTertiaryContainer: #251A00;
+      --surface: #FFF8F6;
+      --surfaceContainerLowest: #FFFFFF;
+      --surfaceContainer: #FCEAE5;
+      --surfaceContainerHigh: #F6E4DF;
+      --onSurface: #231917;
+      --onSurfaceVariant: #53433F;
+      --outlineVariant: #D8C2BC;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Google Sans', Roboto, sans-serif;
+      background-color: var(--surface);
+      color: var(--onSurface);
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    a { text-decoration: none; }
+    
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ---------------- ТИПОГРАФИКА И КОМПОНЕНТЫ ---------------- */
+    h1 {
+      font-size: 5rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    h1 span { color: var(--primary); }
+
+    h2 { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 24px; }
+    h3 { font-size: 2.5rem; font-weight: 700; margin-bottom: 24px; color: inherit; }
+    
+    .subtitle { font-size: 1.5rem; color: var(--onSurfaceVariant); font-weight: 400; margin-bottom: 40px; }
+    
+    .chip {
+      display: inline-flex;
+      background-color: var(--tertiaryContainer);
+      color: var(--onTertiaryContainer);
+      padding: 12px 24px;
+      border-radius: 16px;
+      font-weight: 500;
+      margin-bottom: 32px;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background-color: var(--primary);
+      color: var(--onPrimary);
+      padding: 20px 40px;
+      font-size: 1.125rem;
+      font-weight: 500;
+      border-radius: 32px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: var(--onPrimaryContainer);
+      transform: translateY(-2px);
+      box-shadow: 0px 8px 16px rgba(144, 75, 63, 0.2);
+    }
+
+    /* Мок-блок на случай если картинки пока не загрузились */
+    .img-mock {
+      width: 100%;
+      height: auto;
+      border-radius: 24px;
+      display: block;
+      background: linear-gradient(135deg, var(--surfaceContainerLowest) 0%, var(--surfaceContainerHigh) 100%);
+      aspect-ratio: 16/9; /* Резерв места */
+      object-fit: cover;
+    }
+
+    /* ---------------- БЛОК 1: HERO ---------------- */
+    .hero {
+      padding: 140px 0 100px;
+      text-align: center;
+    }
+    .hero .subtitle {
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ---------------- БЛОК 2: ПРОБЛЕМА / ДАШБОРД ---------------- */
+    .section-wrapper-light {
+      background-color: var(--surfaceContainerLowest);
+      border-radius: 80px;
+      margin: 24px 40px;
+      padding: 100px 0;
+    }
+    .grid { display: flex; align-items: center; gap: 48px; }
+    .col-left { flex: 0 0 45%; }
+    .col-right { flex: 0 0 50%; }
+
+    .bullet-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+    .icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background-color: var(--primaryContainer);
+      color: var(--primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .paper-panel {
+      background-color: var(--surfaceContainer);
+      padding: 24px;
+      border-radius: 40px;
+      box-shadow: 0 24px 48px -12px rgba(144, 75, 63, 0.1);
+    }
+
+    /* ---------------- БЛОК 3: АНАЛИТИКА ---------------- */
+    .analytics { padding: 120px 0; }
+    .analytics .text-center { text-align: center; max-width: 800px; margin: 0 auto 60px; }
+    
+    .panel-high {
+      background-color: var(--surfaceContainerHigh);
+      border: 1px solid var(--outlineVariant);
+      padding: 32px;
+      border-radius: 48px;
+    }
+
+    /* ---------------- БЛОК 4: ФУНКЦИОНАЛ (DARK) ---------------- */
+    .section-wrapper-dark {
+      background-color: var(--primary);
+      color: var(--onPrimary);
+      border-radius: 80px;
+      margin: 24px 40px;
+      padding: 100px 0;
+    }
+    .section-wrapper-dark .grid { flex-direction: row-reverse; }
+    .section-wrapper-dark .chip {
+      background-color: var(--onPrimary);
+      color: var(--primary);
+    }
+    
+    .stats-flex {
+      display: flex;
+      gap: 40px;
+      margin-top: 40px;
+    }
+    .stats-flex strong { display: block; font-size: 2.5rem; font-weight: 800; line-height: 1; margin-bottom: 8px;}
+    .stats-flex span { opacity: 0.8; font-size: 1.1rem; }
+    
+    .panel-dark-elevation {
+      background-color: var(--surfaceContainerLowest);
+      padding: 24px;
+      border-radius: 40px;
+      box-shadow: 0 32px 64px rgba(0,0,0,0.15);
+    }
+
+    /* ---------------- БЛОК 5: CTA INVESTORS ---------------- */
+    .cta-section {
+      padding: 140px 0;
+      text-align: center;
+    }
+    .cta-box {
+      background-color: var(--primaryContainer);
+      color: var(--onPrimaryContainer);
+      border: 3px dashed var(--outlineVariant);
+      border-radius: 64px;
+      padding: 80px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .btn-inverse {
+      background-color: var(--onPrimaryContainer);
+      color: var(--primaryContainer);
+    }
+    .btn-inverse:hover {
+      background-color: var(--primary);
+      color: var(--onPrimary);
+    }
+
+
+    /* ---------------- МЕДИА ЗАПРОСЫ ДЛЯ МОБИЛОК ---------------- */
+    @media (max-width: 900px) {
+      h1 { font-size: 3rem; }
+      h2 { font-size: 2.5rem; }
+      h3 { font-size: 2rem; }
+      .subtitle { font-size: 1.25rem; }
+      .grid { flex-direction: column; text-align: center; gap: 32px; }
+      .section-wrapper-dark .grid { flex-direction: column; }
+      .col-left, .col-right { flex: 100%; width: 100%; }
+      .bullet-item { justify-content: flex-start; text-align: left; }
+      .stats-flex { justify-content: center; }
+      
+      .section-wrapper-light, .section-wrapper-dark { border-radius: 40px; margin: 16px; padding: 60px 0; }
+      .cta-box { border-radius: 40px; padding: 40px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- БЛОК 1: HERO -->
+  <header class="hero container">
+    <div class="chip">Инвестируйте в финансовое спокойствие</div>
+    
+    <h1>
+      Возьми подписки <br />
+      <span>под полный контроль</span>
+    </h1>
+
+    <p class="subtitle">
+      Vibee — умный трекер с аналитикой, календарём платежей и прогнозом бюджета. Отслеживайте расходы, проверяйте сценарии «отмены» сервисов и экономьте миллионы ежегодно.
+    </p>
+
+    <a href="https://vibee-q4ww.vercel.app/" target="_blank" class="btn-primary">
+      Запустить Vibee 
+      <span class="material-icons-round">arrow_forward</span>
+    </a>
+  </header>
+
+
+  <!-- БЛОК 2: ПРОБЛЕМА И РЕШЕНИЕ (Dashboard Overview) -->
+  <section class="section-wrapper-light">
+    <div class="container grid">
+      <div class="col-left">
+        <h3>Люди теряют деньги на «забытых» сервисах</h3>
+        <p class="subtitle" style="font-size: 1.125rem; margin-bottom: 24px;">
+          В среднем пользователи платят за 5+ подписок ежемесячно. Из-за незакрытых Trial-периодов теряется более 30% личного ИТ-бюджета.
+        </p>
+        
+        <div class="bullet-list">
+          <div class="bullet-item">
+            <div class="icon-box"><span class="material-icons-round">health_and_safety</span></div>
+            <span>Наглядный дашборд расходов</span>
+          </div>
+          <div class="bullet-item">
+            <div class="icon-box"><span class="material-icons-round">calendar_today</span></div>
+            <span>Точный календарь предстоящих списаний</span>
+          </div>
+          <div class="bullet-item">
+            <div class="icon-box"><span class="material-icons-round">rule</span></div>
+            <span>Статусы Active / Trial в один клик</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-right">
+        <div class="paper-panel">
+          <!-- ❗Вставьте свой путь до первой картинки. Пример: src="./dashboard-overview.png" -->
+          <img src="./PNG/dashboard.png" alt="Vibee Overview Dashboard" class="img-mock" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- БЛОК 3: МОЩНАЯ АНАЛИТИКА -->
+  <section class="analytics container">
+    <div class="text-center">
+      <h3>Аналитика, которая строит сценарии</h3>
+      <p class="subtitle" style="margin-bottom:0;">
+        Vibee не просто суммирует траты. Наш умный движок прогнозирует ваши траты на год вперёд и позволяет проверить: <i>«А что если я откажусь от этих двух сервисов?»</i>
+      </p>
+    </div>
+
+    <div class="panel-high">
+      <!-- ❗Вставьте путь ко второй картинке. Пример: src="./dashboard-analytics.png" -->
+      <img src="./PNG/analytics.png" alt="Vibee Analytics" class="img-mock" />
+    </div>
+  </section>
+
+
+  <!-- БЛОК 4: ФУНКЦИОНАЛ И КАТАЛОГ -->
+  <section class="section-wrapper-dark">
+    <div class="container grid">
+      <div class="col-left">
+        <div class="chip">Всё под рукой</div>
+        <h3>Безупречная организация</h3>
+        <p style="font-size: 1.125rem; opacity: 0.9; margin-bottom: 32px; line-height: 1.6;">
+          Создавайте личные папки и тегируйте сервисы («Семья», «Личное»). Настраивайте email-уведомления об оплате за несколько дней до списания. Встроенная система сама отсекает то, что больше не нужно.
+        </p>
+
+        <div class="stats-flex">
+          <div>
+            <strong>0</strong>
+            <span>Пропущенных <br/>платежей</span>
+          </div>
+          <div>
+            <strong>x10</strong>
+            <span>Прозрачности <br/>финансов</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-right">
+        <div class="panel-dark-elevation">
+          <!-- ❗Вставьте путь к третьей картинке (Каталог подписок). -->
+          <img src="./PNG/subscriptions.png" alt="Vibee Subscriptions UI" class="img-mock" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- БЛОК 5: ФИНАЛЬНЫЙ CTA ДЛЯ ИНВЕСТОРОВ -->
+  <section class="cta-section container">
+    <div class="cta-box">
+      <h2>Готовы расти вместе с нами?</h2>
+      <p class="subtitle" style="color: var(--secondary);">
+        Vibee объединяет чистый Material 3 UI и функционал, в котором нуждаются миллионы пользователей по всему миру. Присоединяйтесь, инвестируйте и станьте частью проекта с органическим удержанием уровня топ-тир утилит.
+      </p>
+
+      <a href="https://vibee-q4ww.vercel.app/" target="_blank" class="btn-primary btn-inverse">
+        Посмотреть продукт Live
+      </a>
+    </div>
+  </section>
+
+</body>
+</html>
